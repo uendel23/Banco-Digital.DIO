@@ -16,21 +16,44 @@ public abstract class Conta implements IConta {
 		this.numero = SEQUENCIAL++;
 		this.cliente = cliente;
 	}
-
+	//condicionando saque com saldo positivo
 	@Override
 	public void sacar(double valor) {
-		saldo -= valor;
-	}
+		if (saldo >0){
+			saldo -= valor;
+		}else {
+			throw  new RuntimeException("saldo insuficiente");
+		}
 
+	}
+     //condicionando o limite de deposito  500,00 por deposito
 	@Override
 	public void depositar(double valor) {
-		saldo += valor;
+		if (valor <= 500){
+			saldo += valor;
+		}else {
+			throw  new RuntimeException("valor superior ao limite de deposito");
+		}
+
 	}
 
+	//condicionando um limite de tranferências a 200,00 por transferência
 	@Override
 	public void transferir(double valor, IConta contaDestino) {
-		this.sacar(valor);
-		contaDestino.depositar(valor);
+
+		if (saldo > 0 ){
+			this.sacar(valor);
+		}
+		else{
+			throw new RuntimeException("saldo insuficiente");
+		}
+
+		if(valor < 200){
+			contaDestino.depositar(valor);
+
+		}else{
+			throw new RuntimeException("valor supeior ao limite");
+		}
 	}
 
 	protected void imprimirInfosComuns() {
@@ -39,4 +62,6 @@ public abstract class Conta implements IConta {
 		System.out.println(String.format("Numero: %d", this.numero));
 		System.out.println(String.format("Saldo: %.2f", this.saldo));
 	}
+
+
 }
